@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom"
 import Nav from "./components/Nav"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table"
+import { Button } from "./components/ui/button"
+import Alert from "./components/Alert"
 
 type TableProps = {
     caption: string
@@ -44,6 +47,23 @@ function TableEntry({ cardName, description, lastTested }: TableEntryProps) {
                 <TableCell className="font-medium">{cardName}</TableCell>
                 <TableCell>{description}</TableCell>
                 <TableCell className="text-right">{lastTested}</TableCell>
+                <TableCell className="text-right space-x-4">
+                    <Button asChild>
+                        <Link to="#">Edit</Link>
+                    </Button>
+                    <Alert 
+                        actionName="Delete" 
+                        title="Are you sure you want to delete this card?"
+                        description="This will delete the card permanently! Please note that this action cannot be undone."
+                        trigger={
+                        <Button className="bg-red-600">
+                            Delete
+                        </Button>
+                        }
+                        destructive={true}
+                    />
+                    
+                </TableCell>
             </TableRow>
         </TableBody>
     )
