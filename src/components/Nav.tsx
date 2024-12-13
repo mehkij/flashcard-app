@@ -8,12 +8,14 @@ type NavLinkProps = {
 
 function Nav() {
     return (
-        <NavigationMenu>
-        <NavigationMenuList>
-            <NavLink name='Home' linkTo='/' />
-            <NavLink name='My Cards' linkTo='/collection' />
-        </NavigationMenuList>
-        </NavigationMenu>
+        <div className='m-2'>
+            <NavigationMenu>
+            <NavigationMenuList>
+                <NavLink name='Home' linkTo='/' />
+                <NavLink name='My Cards' linkTo='/collection' />
+            </NavigationMenuList>
+            </NavigationMenu>
+        </div>
     )
 }
 
