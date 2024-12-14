@@ -35,10 +35,10 @@ func main() {
 	mux.HandleFunc("POST /api/new-card", apiCfg.createCardHandler)
 
 	server := &http.Server{
-		Addr:    ":5173",
+		Addr:    ":8080",
 		Handler: mux,
 	}
 
-	log.Println("Serving files from . on port: 5173")
+	log.Println("Serving files from . on port: 8080")
 	log.Fatal(server.ListenAndServe())
 }
