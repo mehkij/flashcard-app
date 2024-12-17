@@ -42,3 +42,38 @@ func (q *Queries) CreateCard(ctx context.Context, arg CreateCardParams) (Card, e
 	)
 	return i, err
 }
+
+const getCards = `-- name: GetCards :many
+SELECT id, created_at, updated_at, title, description, last_tested FROM cards
+ORDER BY created_at
+`
+
+func (q *Queries) GetCards(ctx context.Context) ([]Card, error) {
+	rows, err := q.db.QueryContext(ctx, getCards)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Card
+	for rows.Next() {
+		var i Card
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Title,
+			&i.Description,
+			&i.LastTested,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

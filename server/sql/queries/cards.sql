@@ -9,3 +9,7 @@ VALUES (
     $3
 )
 RETURNING *;
+
+-- name: GetCards :many
+SELECT * FROM cards
+ORDER BY created_at;
