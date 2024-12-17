@@ -32,11 +32,16 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+
+	// GET
+	mux.HandleFunc("GET /api/cards", apiCfg.getCardsHandler)
+
+	// POST
 	mux.HandleFunc("POST /api/new-card", apiCfg.createCardHandler)
 
 	server := &http.Server{
 		Addr:    ":8080",
-		Handler: mux,
+		Handler: corsMiddleware(mux),
 	}
 
 	log.Println("Serving files from . on port: 8080")
