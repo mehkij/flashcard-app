@@ -11,6 +11,16 @@ import {
 } from "./components/ui/table";
 import { Button } from "./components/ui/button";
 import Alert from "./components/Alert";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Card from "./types/card";
+import { format } from "date-fns";
+
+const queryClient = new QueryClient();
 
 type TableProps = {
   caption: string;
@@ -24,14 +34,29 @@ type TableEntryProps = {
 
 function CollectionPage() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
       <Nav />
       <NewTable caption="Here are your recent cards!" />
-    </>
+    </QueryClientProvider>
   );
 }
 
 function NewTable({ caption }: TableProps) {
+  const { isPending, error, data } = useQuery<Card[]>({
+    queryKey: ["cards"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:8080/api/cards");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    },
+  });
+
+  if (isPending) return "Loading card data...";
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <Table>
       <TableCaption>{caption}</TableCaption>
@@ -42,16 +67,18 @@ function NewTable({ caption }: TableProps) {
           <TableHead className="text-right">Last Tested</TableHead>
         </TableRow>
       </TableHeader>
-      <TableEntry
-        cardName="Example Card"
-        description="An example card..."
-        lastTested="12/13/2024"
-      />
-      <TableEntry
-        cardName="Example Card #2"
-        description="Some random card..."
-        lastTested="N/A"
-      />
+      {data.map((card) => (
+        <TableEntry
+          cardName={card.title}
+          description={card.description}
+          lastTested={
+            card.last_tested == "0001-01-01T00:00:00Z"
+              ? "Not Tested"
+              : format(new Date(card.last_tested), "M/d/yyyy")
+          }
+          key={card.id}
+        />
+      ))}
     </Table>
   );
 }
