@@ -8,6 +8,8 @@ package database
 import (
 	"context"
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 const createCard = `-- name: CreateCard :one
@@ -41,6 +43,15 @@ func (q *Queries) CreateCard(ctx context.Context, arg CreateCardParams) (Card, e
 		&i.LastTested,
 	)
 	return i, err
+}
+
+const deleteCard = `-- name: DeleteCard :exec
+DELETE FROM cards WHERE id=$1
+`
+
+func (q *Queries) DeleteCard(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deleteCard, id)
+	return err
 }
 
 const getCards = `-- name: GetCards :many

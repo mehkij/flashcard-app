@@ -13,3 +13,6 @@ RETURNING *;
 -- name: GetCards :many
 SELECT * FROM cards
 ORDER BY created_at;
+
+-- name: DeleteCard :exec
+DELETE FROM cards WHERE id=$1;
