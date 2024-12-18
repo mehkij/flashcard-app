@@ -18,6 +18,7 @@ type AlertProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trigger: any;
   destructive: boolean;
+  onConfirm: () => void;
 };
 
 function Alert({
@@ -26,6 +27,7 @@ function Alert({
   description,
   trigger,
   destructive,
+  onConfirm,
 }: AlertProps) {
   return (
     <AlertDialog>
@@ -38,11 +40,13 @@ function Alert({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           {destructive ? (
-            <AlertDialogAction className="bg-red-600">
+            <AlertDialogAction onClick={onConfirm} className="bg-red-600">
               {actionName}
             </AlertDialogAction>
           ) : (
-            <AlertDialogAction>{actionName}</AlertDialogAction>
+            <AlertDialogAction onClick={onConfirm}>
+              {actionName}
+            </AlertDialogAction>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>
