@@ -82,3 +82,21 @@ func (cfg *apiConfig) getCardsHandler(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, 200, payload)
 }
+
+func (cfg *apiConfig) deleteCardHandler(w http.ResponseWriter, r *http.Request) {
+	cardID, err := uuid.Parse(r.PathValue("id"))
+	if err != nil {
+		log.Printf("Error parsing ID: %s", err)
+		w.WriteHeader(500)
+		return
+	}
+
+	err = cfg.queries.DeleteCard(r.Context(), cardID)
+	if err != nil {
+		log.Printf("Error deleting card: %s", err)
+		w.WriteHeader(500)
+		return
+	}
+
+	respondWithJSON(w, 204, "Successfully deleted card.")
+}

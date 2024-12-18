@@ -39,6 +39,9 @@ func main() {
 	// POST
 	mux.HandleFunc("POST /api/cards", apiCfg.createCardHandler)
 
+	// DELETE
+	mux.HandleFunc("DELETE /api/cards/{id}", apiCfg.deleteCardHandler)
+
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: corsMiddleware(mux),
